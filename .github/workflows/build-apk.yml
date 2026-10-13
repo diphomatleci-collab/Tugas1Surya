@@ -24,11 +24,16 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
 
+      - name: Check Flutter environment
+        run: flutter doctor -v
 
       - name: Install dependencies
         run: flutter pub get
@@ -38,9 +43,11 @@ jobs:
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
           echo "sdk.dir=$ANDROID_HOME" >> android/local.properties
 
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Build APK
         run: flutter build apk --release -v
-
 
       - name: Upload APK
         if: success()
@@ -49,3 +56,4 @@ jobs:
           name: Tugas1Surya-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+          retention-days: 7
