@@ -1,7 +1,6 @@
-
 name: Build APK Android
 
-'on':
+on:
   workflow_dispatch:
   push:
     branches:
@@ -24,6 +23,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          # atau ganti ke versi yang cocok project kamu, misal '3.24.5'
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
 
@@ -40,8 +45,11 @@ jobs:
         run: |
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
       - name: Build APK
-        run: flutter build apk --release -v
+        run: flutter build apk --release
 
       - name: Upload APK
         if: success()
