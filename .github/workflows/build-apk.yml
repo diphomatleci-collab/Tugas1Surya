@@ -1,11 +1,11 @@
 
 name: Build APK Android
 
-on:
+'on':
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -37,4 +37,3 @@ jobs:
         with:
           name: aplikasi-android
           path: build/app/outputs/flutter-apk/app-release.apk
-
