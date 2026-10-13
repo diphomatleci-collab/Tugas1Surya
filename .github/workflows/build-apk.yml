@@ -27,24 +27,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-
-      - name: Check Flutter environment
-        run: flutter doctor -v
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Create local.properties
+      - name: Configure Flutter Android SDK
         run: |
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-          echo "sdk.dir=$ANDROID_HOME" >> android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
+          flutter config --android-sdk "$ANDROID_SDK_ROOT"
 
       - name: Accept Android licenses
         run: yes | sdkmanager --licenses || true
+
+      - name: Install Android platform tools
+        run: |
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Build APK
         run: flutter build apk --release -v
